@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -22,7 +23,10 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainListActivity extends ListActivity {
@@ -31,12 +35,17 @@ public class MainListActivity extends ListActivity {
 	public static final int Number_of_posts = 20;
 	public static final String TAG = MainListActivity.class.getSimpleName();
 	protected JSONObject mBlogData;
+	private ProgressBar mProgressBar;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
+        
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
+        
         if(isNetworkAvailable()){
+        	mProgressBar.setVisibility(View.VISIBLE);
         	GetBlogPostTask getblogpost = new GetBlogPostTask();
             getblogpost.execute();
         }
@@ -44,12 +53,7 @@ public class MainListActivity extends ListActivity {
         {
         	Toast.makeText(getApplicationContext(), "Network UnAvailable", Toast.LENGTH_LONG).show();
         }
-  
-        //Resources res = getResources();
-        //mAndroidNames = res.getStringArray(R.array.Android_Names);
-        
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mAndroidNames);
-        //setListAdapter(adapter);
+
     }
 
 
@@ -87,9 +91,18 @@ public class MainListActivity extends ListActivity {
     
 
 	public void updateList() {
-		// TODO Auto-generated method stub
+		mProgressBar.setVisibility(View.INVISIBLE);
+		
 		if(mBlogData == null){
-			//TODO: handle error
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Oops! Sorry!");
+			builder.setMessage("There is a problem getting data from the blog");
+			builder.setPositiveButton(android.R.string.ok, null);
+			AlertDialog Dialog = builder.create();
+			Dialog.show();
+			
+			TextView mEmptyTextView = (TextView) getListView().getEmptyView();
+			mEmptyTextView.setText(getString(R.string.no_item));
 		}
 		else{
 			try {
@@ -103,7 +116,11 @@ public class MainListActivity extends ListActivity {
 				}
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,mBlogPostTitles);
 				setListAdapter(adapter);
+				
 			} catch (JSONException e) {
+				Log.e(TAG, "exception caught: ", e);
+			}
+			catch (Exception e){
 				Log.e(TAG, "exception caught: ", e);
 			}
 		}
@@ -133,15 +150,6 @@ public class MainListActivity extends ListActivity {
 	            	String ReasponseData = new String(charArray);
 	            	
 	            	jsonresponse = new JSONObject(ReasponseData);
-	            	//String status = jsonresponse.getString("status");
-	            	//Log.v(TAG, status);
-	            	
-	            	//JSONArray jsonposts = jsonresponse.getJSONArray("posts");
-	            	//for(int i=0; i<jsonposts.length(); i++){
-	            		//JSONObject jp = jsonposts.getJSONObject(i);
-	            		//String title = jp.getString("title");
-	            		//Log.v(TAG, "Post "+i+": "+title);
-	            	//}
 	            }
 	            else{
 	            	Log.i(TAG, "unsuccessful HTTP Response code: "+ responseCode);
@@ -160,6 +168,7 @@ public class MainListActivity extends ListActivity {
 			}
 			return jsonresponse;
 		}
+		
 		
 		@Override
 		protected void onPostExecute(JSONObject result) {
