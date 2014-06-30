@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
 public class BlogWebViewActivity extends ActionBarActivity {
 
+	protected String mURL = "";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -17,9 +19,10 @@ public class BlogWebViewActivity extends ActionBarActivity {
 
 		Intent intent = getIntent();
 		Uri BlogUri = intent.getData();
+		mURL = BlogUri.toString();
 		
 		WebView webview = (WebView) findViewById(R.id.webView1);
-		webview.loadUrl(BlogUri.toString());
+		webview.loadUrl(mURL);
 	}
 
 	@Override
@@ -36,10 +39,18 @@ public class BlogWebViewActivity extends ActionBarActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.action_share) {
+			sharePost();
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void sharePost() {
+		Intent shareIntent = new Intent(Intent.ACTION_SEND);
+		shareIntent.setType("text/plain");
+		shareIntent.putExtra(Intent.EXTRA_TEXT, mURL);
+		startActivity(Intent.createChooser(shareIntent, getString(R.string.share_title)));
+		
 	}
 
 

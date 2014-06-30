@@ -20,4 +20,8 @@
 
     <string name="title_activity_blog_web_view">Blog Post</string>
 
+    <string name="action_share">Share</string>
+
+    <string name="share_title">How do you want to share?</string>
+
 </resources>
