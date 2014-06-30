@@ -5,6 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="no_item">No Data to Display!</string>
+
     <string-array name="Android_Names">
         <item>Cupcake</item>
         <item>Dount</item>
@@ -16,5 +17,7 @@
         <item>Jelly Bean</item>
         <item>KitKat</item>
     </string-array>
+
+    <string name="title_activity_blog_web_view">Blog Post</string>
 
 </resources>
