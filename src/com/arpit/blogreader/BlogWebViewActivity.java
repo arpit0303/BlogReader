@@ -25,6 +25,7 @@ public class BlogWebViewActivity extends ActionBarActivity {
 		webview.loadUrl(mURL);
 		
 		webview.getSettings().setBuiltInZoomControls(true);
+		
 	}
 
 	@Override
