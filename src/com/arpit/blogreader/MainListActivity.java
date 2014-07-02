@@ -51,6 +51,7 @@ public class MainListActivity extends ListActivity {
         
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
         
+        //checking network availability 
         if(isNetworkAvailable()){
         	mProgressBar.setVisibility(View.VISIBLE);
         	GetBlogPostTask getblogpost = new GetBlogPostTask();
@@ -99,6 +100,7 @@ public class MainListActivity extends ListActivity {
 		mProgressBar.setVisibility(View.INVISIBLE);
 		
 		if(mBlogData == null){
+			//Alert Dialog
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("Oops! Sorry!");
 			builder.setMessage("There is a problem getting data from the blog");
@@ -106,6 +108,7 @@ public class MainListActivity extends ListActivity {
 			AlertDialog Dialog = builder.create();
 			Dialog.show();
 			
+			//empty TextView
 			TextView mEmptyTextView = (TextView) getListView().getEmptyView();
 			mEmptyTextView.setText(getString(R.string.no_item));
 		}
@@ -120,6 +123,7 @@ public class MainListActivity extends ListActivity {
 				{
 					JSONObject jsonpost = jsonPosts.getJSONObject(i);
 					String title = jsonpost.getString(hashmap_title);
+					//convert any HTML syntex to normal text
 					title = Html.fromHtml(title).toString();
 					//mBlogPostTitles[i] = title;
 					String author = jsonpost.getString(hashmap_value);
@@ -153,10 +157,12 @@ public class MainListActivity extends ListActivity {
 			int responseCode = -1;
 			JSONObject jsonresponse = null;
 			try {
+				//connecting to a URL
 				URL blogFeedurl = new URL("http://blog.teamtreehouse.com/api/get_recent_summary/?count="+ Number_of_posts);
 			    HttpURLConnection connection = (HttpURLConnection) blogFeedurl.openConnection();
 	            connection.connect();
 	            
+	            //Get the response code which said connection is done or not
 	            responseCode = connection.getResponseCode();
 	            
 	            if(responseCode == HttpURLConnection.HTTP_OK)
@@ -193,6 +199,7 @@ public class MainListActivity extends ListActivity {
 		protected void onPostExecute(JSONObject result) {
 			super.onPostExecute(result);
 			mBlogData = result;
+			//After getting data Update the List
 			updateList();
 		}
     	

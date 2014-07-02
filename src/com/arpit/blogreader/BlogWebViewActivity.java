@@ -23,6 +23,8 @@ public class BlogWebViewActivity extends ActionBarActivity {
 		
 		WebView webview = (WebView) findViewById(R.id.webView1);
 		webview.loadUrl(mURL);
+		
+		webview.getSettings().setBuiltInZoomControls(true);
 	}
 
 	@Override
