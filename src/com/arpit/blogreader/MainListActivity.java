@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
@@ -44,6 +45,7 @@ public class MainListActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main_list);
         
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
@@ -51,6 +53,7 @@ public class MainListActivity extends ListActivity {
         //checking network availability 
         if(isNetworkAvailable()){
         	mProgressBar.setVisibility(View.VISIBLE);
+        	setProgressBarIndeterminateVisibility(true);
         	GetBlogPostTask getblogpost = new GetBlogPostTask();
             getblogpost.execute();
         }
@@ -95,6 +98,7 @@ public class MainListActivity extends ListActivity {
 
 	public void updateList() {
 		mProgressBar.setVisibility(View.INVISIBLE);
+		setProgressBarIndeterminateVisibility(false);
 		
 		if(mBlogData == null){
 			//Alert Dialog
